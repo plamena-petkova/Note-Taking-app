@@ -3,19 +3,25 @@ import { Content } from "antd/es/layout/layout";
 
 import CardComponent from "./CardComponent";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 const { Search } = Input;
 
 function NotesListComponent() {
-  const items = Array.from({ length: 100 }, (_, index) => ({
+
+
+  const notes = useSelector((state) => state.notes.notes);
+  console.log('Notes', notes)
+
+  const items = Array.from({ length: 50 }, (_, index) => ({
     title: `Item ${index + 1}`,
   }));
 
   const [currentPage, setCurrentPage] = useState(1);
-  const pageSize = 12;
+  const pageSize = 15;
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-  const currentItems = items.slice(startIndex, endIndex);
+  const currentItems =  notes.slice(startIndex, endIndex);
 
   const onSearch = (value, _e, info) => console.log(info?.source, value);
 
@@ -27,24 +33,21 @@ function NotesListComponent() {
         onSearch={onSearch}
         enterButton
       />
-      <Layout
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          paddingTop: 20,
-          minWidth: "80vw",
-        }}
-      >
-        <Content>
+  
+        <Content style={{paddingTop:20}}>
           <List
-            grid={{
-              gutter: 6,
-              column: 4,
-            }}
+              grid={{
+                gutter: 16,
+                xs: 1,
+                sm: 2,
+                md: 3,
+                lg: 4,
+           
+              }}
             dataSource={currentItems}
-            renderItem={(item) => (
+            renderItem={(note) => (
               <List.Item>
-                <CardComponent item={item} />
+                <CardComponent note={note} />
               </List.Item>
             )}
           />
@@ -58,7 +61,7 @@ function NotesListComponent() {
           />
         </Layout>
       </Layout>
-    </Layout>
+ 
   );
 }
 

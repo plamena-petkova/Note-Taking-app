@@ -1,43 +1,41 @@
 import React from "react";
-import { DownOutlined} from "@ant-design/icons";
-import {  Dropdown, Space } from "antd";
+import { Flex, Select} from "antd";
 const items = [
   {
-    key: "1",
-    danger: true,
+    value:"Important",
     label: "Important",
   },
   {
-    key: "4",
+    value: "Work",
     label: "Work",
   },
   {
-    key: "2",
+    value: "Personal",
     label: "Personal",
   },
   {
-    key: "3",
+    value: "To Do",
     label: "To Do",
   },
   {
-    key: "5",
+    value: "Later",
     label: "Later",
   },
 ];
 function DropDownComponent() {
+
   return (
-    <Dropdown
-      menu={{
-        items,
-      }}
-    >
-      <a onClick={() => console.log('Item')}>
-        <Space>
-          Tags
-          <DownOutlined />
-        </Space>
-      </a>
-    </Dropdown>
+    <Flex gap={8}>
+       <Select
+        mode="multiple"
+        defaultValue={items[0]}
+        placeholder="Tags"
+        style={{
+          flex: 1,
+        }}
+        options={items}
+      />
+    </Flex>
   );
 }
 

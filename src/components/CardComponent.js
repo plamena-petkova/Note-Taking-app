@@ -1,9 +1,18 @@
 import { Card, Typography } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined  } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { deleteNote } from "../store/noteReducer";
 
 const { Meta } = Card;
 
-function CardComponent() {
+function CardComponent({note}) {
+
+const dispatch = useDispatch();
+
+const onDeleteHandler = (id) => {
+  //dispatch(deleteNote(id));
+}
+
   return (
     <Card
       style={{
@@ -11,11 +20,10 @@ function CardComponent() {
         margin: 10,
         maxHeight:200
       }}
-      actions={[<DeleteOutlined key="delete" />, <EditOutlined key="edit" />, <EyeOutlined key="show" /> ]}
+      actions={[<DeleteOutlined key="delete" onClick={()=> onDeleteHandler(note.id)} />, <EditOutlined key="edit" />, <EyeOutlined key="show" /> ]}
     >
-      <Meta title="Card title" description="This is the description" />
+      <Meta title={note.noteTitle} description={note.noteDescription} />
       <Typography>
-        
       </Typography>
     </Card>
   );
