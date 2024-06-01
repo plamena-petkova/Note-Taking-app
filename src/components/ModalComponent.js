@@ -10,14 +10,13 @@ function ModalComponent({ openModal }) {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  //const [note, setNote] = useState({title:'', description:'', noteText:'', tag:''});
   const [noteTitle, setNoteTitle] = useState("");
   const [noteDescription, setNoteDescription] = useState("");
   const [noteText, setNoteText] = useState("");
+  const [error, setError] = useState(false);
+  const [noteTags, setNoteTags] = useState([]);
 
   const note = { noteTitle, noteDescription, noteText };
-
-  console.log("Notes", note);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -25,16 +24,25 @@ function ModalComponent({ openModal }) {
   const handleOk = () => {
     if (noteDescription !== "" && noteText !== "" && noteText !== "") {
       note.id = uuidv4();
+      note.tags = noteTags;
       dispatch(createNote(note));
+      setIsModalOpen(false);
+      setNoteText("");
+      setNoteTitle("");
+      setNoteDescription("");
+      setNoteTags([]);
+      setError(false);
+    } else {
+      setError(true);
     }
-
+  };
+  const handleCancel = () => {
     setIsModalOpen(false);
     setNoteText("");
     setNoteTitle("");
     setNoteDescription("");
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
+    setNoteTags([]);
+    setError(false);
   };
 
   useState(() => {
@@ -42,6 +50,11 @@ function ModalComponent({ openModal }) {
       setIsModalOpen(true);
     }
   }, [isModalOpen, openModal]);
+
+  const onSelect = (values) => {
+    console.log(values);
+    setNoteTags(values);
+  };
 
   return (
     <>
@@ -57,23 +70,31 @@ function ModalComponent({ openModal }) {
         onCancel={handleCancel}
       >
         <Input
+          required
+          value={noteTitle}
           style={{ marginTop: 5, marginBottom: 5 }}
           placeholder="Note title"
           onChange={(event) => setNoteTitle(event.target.value)}
+          status={error ? "error" : null}
         />
 
         <Input
           required
+          value={noteDescription}
           style={{ marginTop: 5, marginBottom: 5 }}
           placeholder="Note description"
           onChange={(event) => setNoteDescription(event.target.value)}
+          status={error ? "error" : null}
         />
         <TextArea
+          required
+          value={noteText}
           style={{ marginTop: 5, marginBottom: 5 }}
           placeholder="Notes"
           onChange={(event) => setNoteText(event.target.value)}
+          status={error ? "error" : null}
         ></TextArea>
-        <DropDownComponent />
+        <DropDownComponent onSelect={onSelect} />
       </Modal>
     </>
   );

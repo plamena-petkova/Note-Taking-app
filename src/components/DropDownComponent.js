@@ -1,8 +1,9 @@
 import React from "react";
-import { Flex, Select} from "antd";
+import { Flex, Select } from "antd";
+
 const items = [
   {
-    value:"Important",
+    value: "Important",
     label: "Important",
   },
   {
@@ -22,18 +23,23 @@ const items = [
     label: "Later",
   },
 ];
-function DropDownComponent() {
+
+function DropDownComponent({ onSelect }) {
+
+  const onSelectValues = (value) => {
+    onSelect(value);
+  };
 
   return (
     <Flex gap={8}>
-       <Select
+      <Select
         mode="multiple"
-        defaultValue={items[0]}
         placeholder="Tags"
         style={{
           flex: 1,
         }}
         options={items}
+        onChange={onSelectValues}
       />
     </Flex>
   );
