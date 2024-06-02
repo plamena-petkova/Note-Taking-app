@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Flex, Select } from "antd";
 
 const items = [
@@ -24,39 +24,58 @@ const items = [
   },
 ];
 
-function DropDownComponent({ onSelect, selected}) {
+function DropDownComponent({ onSelect, selected, onClear}) {
 
-  console.log('Selected', selected)
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  console.log('Clear', onClear);
+  console.log('Select', onSelect)
+
+  const handleClear = () => {
+    if(onClear) {
+      setSelectedItems([]);
+    }
+    
+  };
 
 
   const onSelectValues = (value) => {
     onSelect(value);
-
+    setSelectedItems(value);
   };
 
 
-
-
-  /*
+  
   useEffect(() => {
     if (selected) {
-      setTags(selected)
+      setSelectedItems(selected)
     }
-  }, [selected, onSelect]);
-*/
+   
+  }, [selected]);
+
   return (
     <Flex gap={8}>
       <Select
         mode="multiple"
         placeholder="Tags"
+        allowClear
         style={{
           flex: 1,
         }}
         options={items}
         onChange={onSelectValues}
+        value={selectedItems}
+        onClear={handleClear}
       />
     </Flex>
   );
 }
 
 export default DropDownComponent;
+
+/*
+ <Button onClick={handleClear} style={{ marginLeft: '10px' }}>
+        Clear Tags
+      </Button>
+
+*/

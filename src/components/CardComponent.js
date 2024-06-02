@@ -1,129 +1,38 @@
-import { Badge, Card, Popconfirm, Space, Typography } from "antd";
+import { Card, Popconfirm, Space } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import {
-  ClockCircleOutlined,
-  ExclamationCircleOutlined,
-  BulbOutlined,
-  CheckCircleOutlined,
-  FolderOpenOutlined,
-} from "@ant-design/icons";
+import { generateTags } from "../utils/generateTags";
 import { deleteNote } from "../store/noteReducer";
 import EditNoteModalComponent from "./EditNoteModalComponent";
 import { useState } from "react";
+import ShowNoteModalComponent from "./ShowNoteModalComponent";
 
 const { Meta } = Card;
 
 function CardComponent({ note }) {
-
   const dispatch = useDispatch();
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openShowNoteModal, setOpenShowNoteModal] = useState(false);
 
   const onDeleteHandler = (id) => {
     dispatch(deleteNote(id));
   };
 
   const onEditHandler = () => {
-    setOpenModal(true);
+    setOpenEditModal(true);
+  };
+
+  const onShowHandler = () => {
+    setOpenShowNoteModal(true);
   };
 
   const confirm = (id) => {
     onDeleteHandler(id);
   };
   const cancel = (e) => {
-   setOpenModal(false)
-  };
-
-
-  const generateTags = (note) => {
-    if (!note || !note.tags) return null;
-
-    return note.tags.map((tag) => {
-      if (tag === "Work") {
-        return (
-          <Badge
-            key={tag}
-            count={
-              <Space style={{ display: "flex", flexDirection: "row" }}>
-                <Typography style={{ color: "blue" }}>Work</Typography>
-                <FolderOpenOutlined
-                  style={{
-                    color: "blue",
-                  }}
-                />
-              </Space>
-            }
-          />
-        );
-      } else if (tag === "Personal") {
-        return (
-          <Badge
-            key={tag}
-            count={
-              <Space style={{ display: "flex", flexDirection: "row" }}>
-                <Typography style={{ color: "green" }}>Personal</Typography>
-                <BulbOutlined
-                  style={{
-                    color: "green",
-                  }}
-                />
-              </Space>
-            }
-          />
-        );
-      } else if (tag === "To Do") {
-        return (
-          <Badge
-            key={tag}
-            count={
-              <Space style={{ display: "flex", flexDirection: "row" }}>
-                <Typography style={{ color: "yellowgreen" }}>To Do</Typography>
-                <CheckCircleOutlined
-                  style={{
-                    color: "yellowgreen",
-                  }}
-                />
-              </Space>
-            }
-          />
-        );
-      } else if (tag === "Later") {
-        return (
-          <Badge
-            key={tag}
-            count={
-              <Space style={{ display: "flex", flexDirection: "row" }}>
-                <Typography style={{ color: "orange" }}>Later</Typography>
-                <ClockCircleOutlined
-                  style={{
-                    color: "orange",
-                  }}
-                />
-              </Space>
-            }
-          />
-        );
-      } else if (tag === "Important") {
-        return (
-          <Badge
-            key={tag}
-            count={
-              <Space style={{ display: "flex", flexDirection: "row" }}>
-                <Typography style={{ color: "red" }}>Important</Typography>
-                <ExclamationCircleOutlined
-                  style={{
-                    color: "red",
-                  }}
-                />
-              </Space>
-            }
-          />
-        );
-      } else {
-        return null;
-      }
-    });
+    setOpenEditModal(false);
+    setOpenShowNoteModal(false);
   };
 
   return (
@@ -148,12 +57,25 @@ function CardComponent({ note }) {
             <DeleteOutlined key="delete" />
           </Popconfirm>
         </>,
-        <EditOutlined key="edit" onClick={() => onEditHandler(note.id)} />,
-        <EyeOutlined key="show" />,
+        <EditOutlined key="edit" onClick={() => onEditHandler()} />,
+        <EyeOutlined key="show" onClick={() => onShowHandler()} />,
       ]}
     >
       <Meta title={note.noteTitle} description={note.noteDescription} />
-      {openModal && <EditNoteModalComponent note={note} openModal={openModal} closeModal={cancel} />}
+      {openEditModal && (
+        <EditNoteModalComponent
+          note={note}
+          openModal={openEditModal}
+          closeModal={cancel}
+        />
+      )}
+      {openShowNoteModal && (
+        <ShowNoteModalComponent
+          note={note}
+          openModal={openShowNoteModal}
+          closeModal={cancel}
+        />
+      )}
       <Space
         style={{
           display: "flex",

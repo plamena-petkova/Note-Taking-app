@@ -22,7 +22,6 @@ function EditNoteModalComponent({ openModal, note, closeModal }) {
       dispatch(editNote(editedNote));
       setIsModalOpen(false);
       closeModal(isModalOpen)
-
       setError(false);
     } else {
       setError(true);

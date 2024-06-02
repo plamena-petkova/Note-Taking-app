@@ -30,6 +30,7 @@ function ModalComponent() {
       setNoteText("");
       setNoteTitle("");
       setNoteDescription("");
+      onClear();
       setError(false);
     } else {
       setError(true);
@@ -41,11 +42,17 @@ function ModalComponent() {
     setNoteTitle("");
     setNoteDescription("");
     setError(false);
+    onClear()
   };
 
   const onSelect = (values) => {
     setNoteTags(values);
   };
+
+  const onClear = () => {
+    setNoteTags([]);
+  };
+
 
   return (
     <>
@@ -85,7 +92,7 @@ function ModalComponent() {
           onChange={(event) => setNoteText(event.target.value)}
           status={error ? "error" : null}
         ></TextArea>
-        <DropDownComponent onSelect={onSelect} />
+        <DropDownComponent onSelect={onSelect} onClear={onClear} />
       </Modal>
     </>
   );
