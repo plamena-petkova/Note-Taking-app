@@ -1,17 +1,40 @@
-import { Badge, Card, Space, Typography } from "antd";
+import { Badge, Card, Popconfirm, Space, Typography } from "antd";
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-//import { useDispatch } from "react-redux";
-import { ClockCircleOutlined, ExclamationCircleOutlined, BulbOutlined, CheckCircleOutlined, FolderOpenOutlined  } from "@ant-design/icons";
-
+import { useDispatch } from "react-redux";
+import {
+  ClockCircleOutlined,
+  ExclamationCircleOutlined,
+  BulbOutlined,
+  CheckCircleOutlined,
+  FolderOpenOutlined,
+} from "@ant-design/icons";
+import { deleteNote } from "../store/noteReducer";
+import EditNoteModalComponent from "./EditNoteModalComponent";
+import { useState } from "react";
 
 const { Meta } = Card;
 
 function CardComponent({ note }) {
-  //const dispatch = useDispatch();
+
+  const dispatch = useDispatch();
+
+  const [openModal, setOpenModal] = useState(false);
 
   const onDeleteHandler = (id) => {
-    //dispatch(deleteNote(id));
+    dispatch(deleteNote(id));
   };
+
+  const onEditHandler = () => {
+    setOpenModal(true);
+  };
+
+  const confirm = (id) => {
+    onDeleteHandler(id);
+  };
+  const cancel = (e) => {
+   setOpenModal(false)
+  };
+
 
   const generateTags = (note) => {
     if (!note || !note.tags) return null;
@@ -56,7 +79,7 @@ function CardComponent({ note }) {
             count={
               <Space style={{ display: "flex", flexDirection: "row" }}>
                 <Typography style={{ color: "yellowgreen" }}>To Do</Typography>
-                <CheckCircleOutlined 
+                <CheckCircleOutlined
                   style={{
                     color: "yellowgreen",
                   }}
@@ -114,16 +137,23 @@ function CardComponent({ note }) {
         justifyContent: "space-between",
       }}
       actions={[
-        <DeleteOutlined
-          key="delete"
-          onClick={() => onDeleteHandler(note.id)}
-        />,
-        <EditOutlined key="edit" />,
+        <>
+          <Popconfirm
+            description="Delete the note?"
+            onConfirm={() => confirm(note.id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+          >
+            <DeleteOutlined key="delete" />
+          </Popconfirm>
+        </>,
+        <EditOutlined key="edit" onClick={() => onEditHandler(note.id)} />,
         <EyeOutlined key="show" />,
       ]}
     >
       <Meta title={note.noteTitle} description={note.noteDescription} />
-
+      {openModal && <EditNoteModalComponent note={note} openModal={openModal} closeModal={cancel} />}
       <Space
         style={{
           display: "flex",

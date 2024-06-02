@@ -24,12 +24,26 @@ const items = [
   },
 ];
 
-function DropDownComponent({ onSelect }) {
+function DropDownComponent({ onSelect, selected}) {
+
+  console.log('Selected', selected)
+
 
   const onSelectValues = (value) => {
     onSelect(value);
+
   };
 
+
+
+
+  /*
+  useEffect(() => {
+    if (selected) {
+      setTags(selected)
+    }
+  }, [selected, onSelect]);
+*/
   return (
     <Flex gap={8}>
       <Select

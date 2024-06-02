@@ -1,35 +1,28 @@
 import React, { useState } from "react";
-import { Button, Input, Modal, Space } from "antd";
+import { Input, Modal } from "antd";
 import DropDownComponent from "./DropDownComponent";
 import TextArea from "antd/es/input/TextArea";
-import { createNote } from "../store/noteReducer";
+import { editNote } from "../store/noteReducer";
 import { useDispatch } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
 
-function ModalComponent() {
+function EditNoteModalComponent({ openModal, note, closeModal }) {
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [noteTitle, setNoteTitle] = useState("");
-  const [noteDescription, setNoteDescription] = useState("");
-  const [noteText, setNoteText] = useState("");
+  const [noteTitle, setNoteTitle] = useState(note.noteTitle);
+  const [noteDescription, setNoteDescription] = useState(note.noteDescription);
+  const [noteText, setNoteText] = useState(note.noteText);
   const [error, setError] = useState(false);
   const [noteTags, setNoteTags] = useState([]);
 
-  const note = { noteTitle, noteDescription, noteText };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
   const handleOk = () => {
-    if (noteDescription !== "" && noteText !== "" && noteText !== "") {
-      note.id = uuidv4();
-      note.tags = noteTags;
-      dispatch(createNote(note));
+    if (noteTitle !== "" && noteDescription !== "" && noteText !== "") {
+      const editedNote = { noteTitle, noteDescription, noteText, noteTags };
+      editedNote.id = note.id;
+      dispatch(editNote(editedNote));
       setIsModalOpen(false);
-      setNoteText("");
-      setNoteTitle("");
-      setNoteDescription("");
+      closeModal(isModalOpen)
+
       setError(false);
     } else {
       setError(true);
@@ -37,9 +30,7 @@ function ModalComponent() {
   };
   const handleCancel = () => {
     setIsModalOpen(false);
-    setNoteText("");
-    setNoteTitle("");
-    setNoteDescription("");
+    closeModal(true);
     setError(false);
   };
 
@@ -49,14 +40,9 @@ function ModalComponent() {
 
   return (
     <>
-      <Space>
-        <Button type="primary" size="large" onClick={showModal}>
-          + Add Note
-        </Button>
-      </Space>
       <Modal
         title="Create Note"
-        open={isModalOpen}
+        open={openModal}
         onOk={handleOk}
         onCancel={handleCancel}
       >
@@ -85,9 +71,9 @@ function ModalComponent() {
           onChange={(event) => setNoteText(event.target.value)}
           status={error ? "error" : null}
         ></TextArea>
-        <DropDownComponent onSelect={onSelect} />
+        <DropDownComponent onSelect={onSelect} selected={note.tags} />
       </Modal>
     </>
   );
 }
-export default ModalComponent;
+export default EditNoteModalComponent;

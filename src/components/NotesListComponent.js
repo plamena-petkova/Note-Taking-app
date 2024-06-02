@@ -8,13 +8,9 @@ const { Search } = Input;
 
 function NotesListComponent() {
 
-
   const notes = useSelector((state) => state.notes.notes);
-  console.log('Notes', notes)
 
-  const items = Array.from({ length: 50 }, (_, index) => ({
-    title: `Item ${index + 1}`,
-  }));
+
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 15;
@@ -56,7 +52,7 @@ function NotesListComponent() {
           <Pagination
             current={currentPage}
             pageSize={pageSize}
-            total={items.length}
+            total={notes.length}
             onChange={(page) => setCurrentPage(page)}
           />
         </Layout>
