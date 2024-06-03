@@ -65,7 +65,6 @@ function ModalComponent() {
     
 }, [noteTags]) 
 
-  console.log('Select', noteTags)
 
   return (
     <>

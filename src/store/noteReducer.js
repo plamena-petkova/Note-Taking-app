@@ -39,7 +39,6 @@ export const noteSlice = createSlice({
     tagSearch:(state, action) => {
       state.searchTag = action.payload
   },
-
   },
 
 });
