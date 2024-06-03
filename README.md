@@ -14,3 +14,6 @@ When you clone the repo go to the source folder and run `npm install` to install
     - ReactJS
     - React-redux-toolkit
     - Ant Design
+
+# Hosting
+You can reach the app on => https://mind-notes.netlify.app
