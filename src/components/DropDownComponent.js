@@ -24,34 +24,27 @@ const items = [
   },
 ];
 
-function DropDownComponent({ onSelect, selected, onClear}) {
+function DropDownComponent({ onSelect, selected, onCancel, onCancelChange}) {
 
   const [selectedItems, setSelectedItems] = useState([]);
-
-  console.log('Clear', onClear);
-  console.log('Select', onSelect)
-
-  const handleClear = () => {
-    if(onClear) {
-      setSelectedItems([]);
-    }
-    
-  };
-
 
   const onSelectValues = (value) => {
     onSelect(value);
     setSelectedItems(value);
   };
-
-
   
   useEffect(() => {
+   
     if (selected) {
       setSelectedItems(selected)
     }
-   
-  }, [selected]);
+    if(!onCancel && (selected === undefined || selected.length === 0)) {
+      setSelectedItems([])
+      onCancelChange(!onCancel)
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, onCancel]);
 
   return (
     <Flex gap={8}>
@@ -65,7 +58,6 @@ function DropDownComponent({ onSelect, selected, onClear}) {
         options={items}
         onChange={onSelectValues}
         value={selectedItems}
-        onClear={handleClear}
       />
     </Flex>
   );
@@ -73,9 +65,3 @@ function DropDownComponent({ onSelect, selected, onClear}) {
 
 export default DropDownComponent;
 
-/*
- <Button onClick={handleClear} style={{ marginLeft: '10px' }}>
-        Clear Tags
-      </Button>
-
-*/

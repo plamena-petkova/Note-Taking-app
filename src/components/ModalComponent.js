@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Input, Modal, Space } from "antd";
 import DropDownComponent from "./DropDownComponent";
 import TextArea from "antd/es/input/TextArea";
@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 
 function ModalComponent() {
+  const buttonStyle = { width: 120 };
   const dispatch = useDispatch();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,7 @@ function ModalComponent() {
   const [noteText, setNoteText] = useState("");
   const [error, setError] = useState(false);
   const [noteTags, setNoteTags] = useState([]);
+  const [onCancel, setOnCancel] = useState(false);
 
   const note = { noteTitle, noteDescription, noteText };
 
@@ -30,7 +32,8 @@ function ModalComponent() {
       setNoteText("");
       setNoteTitle("");
       setNoteDescription("");
-      onClear();
+      setNoteTags([]);
+
       setError(false);
     } else {
       setError(true);
@@ -41,23 +44,33 @@ function ModalComponent() {
     setNoteText("");
     setNoteTitle("");
     setNoteDescription("");
+    setNoteTags([]);
     setError(false);
-    onClear()
+  
   };
 
   const onSelect = (values) => {
     setNoteTags(values);
   };
 
-  const onClear = () => {
-    setNoteTags([]);
+  const onCancelChange = (onCancel) => {
+    setOnCancel(onCancel);
   };
 
+  useEffect(() => {
+    if(noteTags.length === 0) {
+      onSelect(noteTags);
+      setOnCancel(true);
+    }
+    
+}, [noteTags]) 
+
+  console.log('Select', noteTags)
 
   return (
     <>
       <Space>
-        <Button type="primary" size="large" onClick={showModal}>
+        <Button type="primary" size="large" style={buttonStyle} onClick={() => {showModal();setOnCancel(!onCancel)}}>
           + Add Note
         </Button>
       </Space>
@@ -92,7 +105,7 @@ function ModalComponent() {
           onChange={(event) => setNoteText(event.target.value)}
           status={error ? "error" : null}
         ></TextArea>
-        <DropDownComponent onSelect={onSelect} onClear={onClear} />
+        <DropDownComponent onSelect={onSelect} onCancel={onCancel} onCancelChange={onCancelChange}/>
       </Modal>
     </>
   );

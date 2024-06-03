@@ -37,10 +37,14 @@ function EditNoteModalComponent({ openModal, note, closeModal }) {
     setNoteTags(values);
   };
 
+  const onCancelChange = () => {
+    return noteTags;
+  }
+
   return (
     <>
       <Modal
-        title="Create Note"
+        title="Edit Note"
         open={openModal}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -70,7 +74,7 @@ function EditNoteModalComponent({ openModal, note, closeModal }) {
           onChange={(event) => setNoteText(event.target.value)}
           status={error ? "error" : null}
         ></TextArea>
-        <DropDownComponent onSelect={onSelect} selected={note.tags} />
+        <DropDownComponent onSelect={onSelect} selected={note.tags} onCancelChange={onCancelChange} />
       </Modal>
     </>
   );

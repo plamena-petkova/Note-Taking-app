@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   notes: [],
+  searchTag:''
 };
 
 
@@ -35,11 +36,14 @@ export const noteSlice = createSlice({
           note.tags = action.payload.noteTags;
         }
     },
+    tagSearch:(state, action) => {
+      state.searchTag = action.payload
+  },
 
   },
 
 });
 
-export const { createNote, deleteNote, deleteAllNotes, editNote } = noteSlice.actions;
+export const { createNote, deleteNote, deleteAllNotes, editNote, tagSearch} = noteSlice.actions;
 
 export default noteSlice.reducer;
